@@ -323,7 +323,7 @@ while 1
     
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Hit Button %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        if x == 6 && (y == 5 || y == 6) && playerValue ~= 21 && playerValue2 == 0 && doubledown == 0 %%%% Checks if hit button has been pressed and that playerValue2 doesnt exist, playerValue isnt 21 and a doubledown hasn't happened
+        if (x == 6 && (y == 5 || y == 6)) && (playerValue ~= 21) && (playerValue2 == 0) && (doubledown == 0) && (length(playerHand)) < 8%%%% Checks if hit button has been pressed and that playerValue2 doesnt exist, playerValue isnt 21 and a doubledown hasn't happened
             
             %%% Button Press %%%
             
@@ -595,7 +595,7 @@ while 1
             
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Hitting For First Deck in a Split %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        elseif (x == 6 && (y == 5 || y == 6)) && (playerValue2 > 0) && (loser ~= 1) && (stand == 0) && (playerValue ~= 21) %%%% Checks if Hit has been clicked while a split has happend without a loss, stand, or playervalue of 21
+        elseif (x == 6 && (y == 5 || y == 6)) && (playerValue2 > 0) && (loser ~= 1) && (stand == 0) && (playerValue ~= 21) && (length(playerHand2) < 4) %%%% Checks if Hit has been clicked while a split has happend without a loss, stand, or playervalue of 21
             
             %%% Button Press %%%
             
@@ -662,7 +662,7 @@ while 1
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Hitting For Second Deck in a Split %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        elseif (x == 6 && (y == 5 || y == 6)) && (playerValue2 > 0) && ((loser == 1) || (stand == 1)) && (playerValue2 ~= 21)
+        elseif (x == 6 && (y == 5 || y == 6)) && (playerValue2 > 0) && ((loser == 1) || (stand == 1)) && (playerValue2 ~= 21) && (length(playerHand2) < 4)
             
             %%% Button Press %%%
             
@@ -962,6 +962,9 @@ while 1
                         break
                     end
                     drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
+
+                elseif length(dealerHand) == 6
+                    break
                 end
 
             end
