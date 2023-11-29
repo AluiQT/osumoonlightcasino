@@ -1141,7 +1141,22 @@ while 1
             stand = 0; %Reset Value
             start = 0; %Reset Value
             balance = newBalance; %Updates universal balance
-            doubledown = 0; %Reset Value
+            doubledown = 0; %Reset Value      
+            %Reset dictionary
+            d = dictionary(); %initializes dictionary
+            counter = 1; %counter for assigning cards key/value pairs in the dictionary
+            for i = 1:length(deck) %for loop that iterates through each card in the deck
+                if counter >= 1 && counter <= 10 %Checks for number cards
+                d = insert(d,deck(i),counter); %Assigns value of counter to current card in dictionary
+                counter = counter + 1; %moves to the next value to assign
+                elseif counter >= 11 && counter <= 13 %Checks for face cards
+                    d = insert(d,deck(i),10); %assigns each faces card with a value of 10
+                    counter = counter + 1; %moves to next value to assign
+                    if counter == 14 %checks if counter has reached end of a suite
+                        counter = 1; %resets counter
+                    end
+                end
+            end       
         elseif x == 3 && (y == 7 || y == 8 )
             close;
             balance = newBalance;
