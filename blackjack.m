@@ -31,8 +31,8 @@ doubledown = 0; %tracks if doubledown has been played
 cardflip = audioplayer(y4, Fs4);
 [y5,Fs5] = audioread('whoosh.mp3');
 carddeal = audioplayer(y5, Fs5); 
-[y6,Fs5] = audioread('buttonPress.mp3');
-press = audioplayer(y6, Fs5); 
+[y6,Fs6] = audioread('buttonPress.mp3');
+press = audioplayer(y6, Fs6); 
 
 %%%%%%%%%%%%%%%%% Dictionary %%%%%%%%%%%%%%%%%
 d = dictionary(); %initializes dictionary
@@ -541,8 +541,8 @@ while 1
             
             %%% Button Press %%%
             
-            foreground(6,7) = 157; %Double Down Dark
-            foreground(6,8) = 158; %Double Down Dark
+            foreground(6,7) = 157; %Split Dark
+            foreground(6,8) = 158; %Split Dark
             drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
             play(press) % plays audio
             pause(0.15) % pause for press audio to play
@@ -561,7 +561,8 @@ while 1
 
             [playerValue,d] = playertotal(playerHand,d,playerValue); %%%% Calculates the current value of playerHand
             [playerValue2,d] = player2total(playerHand2,d,playerValue2); %%%% Calculates the current value of playerHand2
-            newBalance = Balance - (currentBet * 2); %calculates number to be displayed in total balance
+            currentBet = currentBet * 2;
+            newBalance = balance - currentBet; %calculates number to be displayed in total balance
             foreground = balanceButton(foreground,newBalance); %%%loads balance in the foreground
             foreground(4,5) = playerHand(1); %Front of playerHand(1)
             foreground(4,8) = playerHand2(1); %Front of playerHand2(1)
@@ -982,7 +983,7 @@ while 1
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Winner Check %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    if (dealerValue >= 17) && (winner ~= 1) && (loser ~= 2) % Check for non-split rounds
+    if (dealerValue >= 17) && (winner ~= 1) && (loser ~= 2) && isempty(playerHand2) % Check for non-split rounds
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Result for Dealer Win %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -1029,7 +1030,7 @@ while 1
             foreground(4,2) = 139; % "Win" message
             foreground(4,3) = 140; % "Win" message
             winner = 1; % indicates that the game has a winner
-            newBalance = balance + (currentBet * 2); %calculates number to be displayed in total balance
+            newBalance = balance + currentBet; %calculates number to be displayed in total balance
             foreground = balanceButton(foreground,newBalance); %%%loads balance in the foreground
             drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
 
@@ -1051,7 +1052,31 @@ while 1
             foreground(4,2) = 141; % "Lose" message
             foreground(4,3) = 142; % "Lose" message
             winner = 1; % indicates that the game has a winner
-            newBalance = balance - (currentBet * 2); %calculates number to be displayed in total balance
+            newBalance = balance - currentBet; %calculates number to be displayed in total balance
+            foreground = balanceButton(foreground,newBalance); %%%loads balance in the foreground
+            drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Result for Tie and Win %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        elseif ((dealerValue < playerValue) && (dealerValue == playerValue2)) || ((dealerValue == playerValue) && (dealerValue < playerValue2))
+            foreground(3,2) = 137; % "You" message
+            foreground(3,3) = 138; % "You" message
+            foreground(4,2) = 139; % "Win" message
+            foreground(4,3) = 140; % "Win" message
+            winner = 1; % indicates that the game has a winner
+            newBalance = balance + (currentBet/2); %calculates number to be displayed in total balance
+            foreground = balanceButton(foreground,newBalance); %%%loads balance in the foreground
+            drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Result for Tie and Loss %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        elseif ((dealerValue > playerValue) && (dealerValue == playerValue2)) || ((dealerValue == playerValue) && (dealerValue > playerValue2))
+            foreground(3,2) = 137; % "You" message
+            foreground(3,3) = 138; % "You" message
+            foreground(4,2) = 139; % "Lose" message
+            foreground(4,3) = 140; % "Lose" message
+            winner = 1; % indicates that the game has a winner
+            newBalance = balance - (currentBet/2); %calculates number to be displayed in total balance
             foreground = balanceButton(foreground,newBalance); %%%loads balance in the foreground
             drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
 
@@ -1066,14 +1091,14 @@ while 1
             drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
         end
 
-
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Both Hands Bust %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     elseif loser == 2 % Check if Both Split Hands Busted
          foreground(3,2) = 137; % "You" message
          foreground(3,3) = 138; % "You" message
          foreground(4,2) = 141; % "Lose" message
          foreground(4,3) = 142; % "Lose" message
-         newBalance = balance - (currentBet * 2); %calculates number to be displayed in total balance
+         newBalance = balance - currentBet; %calculates number to be displayed in total balance
          foreground = balanceButton(foreground,newBalance); %%%loads balance in the foreground
          winner = 1; % indicates that the game has a winner
          drawScene(card_scene,blackjackTable,foreground); %%% Updates foreground
